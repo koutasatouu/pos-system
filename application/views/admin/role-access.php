@@ -23,7 +23,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -32,22 +32,24 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Menu</th>
-                                        <th>Access</th>
+                                        <th>Role</th>
+                                        <th>Action(s)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php $x = 1;foreach ($menu as $m) : ?>
+                                    <?php $x = 1;
+                                    foreach ($menu as $m) : ?>
                                         <tr>
                                             <td><?= $x ?></td>
                                             <td><?= $m['menu'] ?></td>
                                             <td>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" <?= check_access($role['id'],$m['id']); ?> data-role="<?= $role['id']; ?>" data-menu="<?= $m['id']; ?>">
+                                                    <input class="form-check-input" type="checkbox" <?= check_access($role['id'], $m['id']); ?> data-role="<?= $role['id']; ?>" data-menu="<?= $m['id']; ?>">
                                                 </div>
                                             </td>
                                         </tr>
-                                    <?php $x++;endforeach; ?>
+                                    <?php $x++;
+                                    endforeach; ?>
                                 </tbody>
                                 <tfoot>
                                     <tr>

@@ -5,12 +5,18 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Blank Page</h1>
+                    <h1>My Profile</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Blank Page</li>
+                        <li class="breadcrumb-item">
+                            <?php if ($user['role_id'] == 1) {
+                                echo '<a href="' . base_url('admin') . '">Home</a>';
+                            } else {
+                                echo '<a href="' . base_url('user') . '">Home</a>';
+                            } ?>
+                        </li>
+                        <li class="breadcrumb-item active">My Profile</li>
                     </ol>
                 </div>
             </div>
@@ -20,30 +26,59 @@
     <!-- Main content -->
     <section class="content">
 
-        <!-- Default box -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Title</h3>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Profile Image -->
+                    <div class="card card-primary card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle" src="<?= base_url('assets/img/profile/') . $user['image'] ?>" alt="User profile picture">
+                            </div>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                        <i class="fas fa-times"></i>
-                    </button>
+                            <h3 class="profile-username text-center"><?= $user['name'] ?></h3>
+
+                            <p class="text-muted text-center">
+                                <?php if ($user['role_id'] == 1) {
+                                    echo "Administrator";
+                                } else {
+                                    echo "Member";
+                                } ?>
+                            </p>
+
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <b>Followers</b> <a class="float-right">1,322</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Following</b> <a class="float-right">543</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Friends</b> <a class="float-right">13,287</a>
+                                </li>
+                            </ul>
+
+                            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
                 </div>
             </div>
-            <div class="card-body">
-                Start creating your amazing application!
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Profile Image -->
+                    <div class="card card-danger card-outline">
+                        <div class="card-body box-profile">
+
+                            <a href="<?= base_url('user/logout') ?>" class="btn btn-danger btn-block"><b>Logout</b></a>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
             </div>
-            <!-- /.card-body -->
-            <div class="card-footer">
-                Footer
-            </div>
-            <!-- /.card-footer-->
         </div>
-        <!-- /.card -->
 
     </section>
     <!-- /.content -->

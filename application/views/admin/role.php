@@ -9,7 +9,13 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Home</a></li>
+                        <li class="breadcrumb-item">
+                            <?php if ($user['role_id'] == 1) {
+                                echo '<a href="' . base_url('admin') . '">Home</a>';
+                            } else {
+                                echo '<a href="' . base_url('user') . '">Home</a>';
+                            } ?>
+                        </li>
                         <li class="breadcrumb-item active">Role</li>
                     </ol>
                 </div>
@@ -22,7 +28,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-4">
+                <div class="col-6">
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -40,18 +46,31 @@
                                 <tbody>
                                     <?php foreach ($role as $r) : ?>
                                         <tr>
-                                            <td><?= $r['id'] ?></td>
+                                            <td>
+                                                <?php static $i = 0;
+                                                echo ++$i; ?>
+                                            </td>
                                             <td><?= $r['role'] ?></td>
                                             <td>
-                                                <a href="<?= base_url('admin/roleaccess/').$r['id']; ?>">
-                                                    Access
+                                                <!-- Always show Role Access button -->
+                                                <a href="<?= base_url('admin/roleaccess/') . $r['id']; ?>" class="btn btn-xs btn-info">
+                                                    <i class="fas fa-id-card"></i>
                                                 </a>
-                                                <a href="" class="btn btn-xs btn-primary">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure?')">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </a>
+
+                                                <!-- Edit/Delete available only for non-protected role (id != 1) -->
+                                                <?php if ($r['id'] != 1) : ?>
+                                                    <button class="btn btn-xs btn-primary btn-edit-role" data-id="<?= $r['id'] ?>" data-role="<?= htmlspecialchars($r['role'], ENT_QUOTES) ?>">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-xs btn-danger btn-delete-role" data-id="<?= $r['id'] ?>" data-role="<?= htmlspecialchars($r['role'], ENT_QUOTES) ?>">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                <?php else : ?>
+                                                    <!-- if a non-admin user somehow sees this row, show Protected label -->
+                                                    <?php if ($user['role_id'] !== 1) : ?>
+                                                        <button class="btn btn-xs btn-danger" disabled>Protected</button>
+                                                    <?php endif; ?>
+                                                <?php endif; ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -75,6 +94,55 @@
 </div>
 <!-- /.content-wrapper -->
 
+<!-- Edit Role Modal -->
+<div class="modal fade" id="editRoleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= base_url('admin/updaterole'); ?>" method="post">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="role_id" value="">
+                    <div class="form-group">
+                        <label>Role Name</label>
+                        <input type="text" class="form-control" name="role" placeholder="Role Name...">
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Delete Role Modal -->
+<div class="modal fade" id="deleteRoleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= base_url('admin/deleterole'); ?>" method="post">
+                <input type="hidden" name="role_id" value="">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Role</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete role <strong class="role-name"></strong>?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- /.modal -->
 <div class="modal fade" id="roleModal">
     <div class="modal-dialog">

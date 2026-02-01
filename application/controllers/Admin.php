@@ -11,7 +11,7 @@ class Admin extends CI_Controller
     public function index()
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        $data['title'] = 'POS-System Admin Dashboard';
+        $data['title'] = 'Dashboard';
         $this->load->view('templates/header', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('templates/sidebar', $data);
@@ -31,42 +31,167 @@ class Admin extends CI_Controller
     public function role()
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        $data['role'] = $this->db->get('user_role')->result_array();
+        if ((int)$this->session->userdata('role_id') === 1) {
+            $data['role'] = $this->db->get('user_role')->result_array();
+        } else {
+            $data['role'] = $this->db->where('id !=', 1)->get('user_role')->result_array();
+        }
         $data['title'] = 'POS-System Admin Dashboard';
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('role', 'Role', 'required|trim|is_unique[user_role.role]', [
+            'required'  => '&nbsp;Role name cannot be empty!',
+            'is_unique' => '&nbsp;This role already exists!'
+        ]);
+
+        if ($this->form_validation->run() === true) {
+            $roleName = $this->input->post('role', true);
+            $this->db->insert('user_role', ['role' => $roleName]);
+
+            $this->session->set_flashdata('msg_type', 'success');
+            $this->session->set_flashdata('msg', '&nbsp;New role added!');
+            redirect('admin/role');
+            return;
+        } elseif ($this->input->post()) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', validation_errors());
+            redirect('admin/role');
+            return;
+        }
+
         $this->load->view('templates/header', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('templates/sidebar', $data);
-        $this->load->view('admin/role',$data);
+        $this->load->view('admin/role', $data);
         $this->load->view('templates/footer');
+    }
+    public function updaterole()
+    {
+        $role_id = $this->input->post('role_id');
+        $role = trim($this->input->post('role'));
+
+        if ((int)$role_id === 1) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Role Admin cannot be edited!');
+            redirect('admin/role');
+            return;
+        }
+
+        if ($role === '') {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Role name cannot be empty!');
+            redirect('admin/role');
+            return;
+        }
+
+        $this->db->where('id', $role_id)->update('user_role', ['role' => $role]);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;Role updated!');
+        redirect('admin/role');
     }
     public function roleaccess($role_id)
     {
+        if ((int)$role_id === 1 && (int)$this->session->userdata('role_id') !== 1) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Access to this role is restricted!');
+            redirect('admin/role');
+            return;
+        }
+
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
-        $data['role'] = $this->db->get_where('user_role',['id'=>$role_id])->row_array();
+        $data['role'] = $this->db->get_where('user_role', ['id' => $role_id])->row_array();
         $this->db->where('id !=', 1);
         $data['menu'] = $this->db->get('user_menu')->result_array();
         $data['title'] = 'POS-System Admin Dashboard';
         $this->load->view('templates/header', $data);
         $this->load->view('templates/topbar', $data);
         $this->load->view('templates/sidebar', $data);
-        $this->load->view('admin/role-access',$data);
+        $this->load->view('admin/role-access', $data);
         $this->load->view('templates/footer');
     }
     public function changeaccess()
     {
-        $menu_id = $this->input->post('menuId');
-        $role_id = $this->input->post('roleId');
-        $data = [
-            'role_id'=>$role_id,
-            'menu_id'=>$menu_id
-        ];
-        $result = $this->db->get_where('user_access_menu',$data);
-        if($result->num_rows()<1){
-            $this->db->insert('user_access_menu',$data);
-        }else{
-            $this->db->delete('user_access_menu',$data);
+        $menu_id = (int)$this->input->post('menuId');
+        $role_id = (int)$this->input->post('roleId');
+
+        // Restrict non-admins from touching admin role
+        if ($role_id === 1 && (int)$this->session->userdata('role_id') !== 1) {
+            $this->output
+                ->set_status_header(403)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'status'    => 'error',
+                    'message'   => 'Forbidden',
+                    'csrf_hash' => $this->security->get_csrf_hash()
+                ]));
+            return;
         }
+
+        if (!$menu_id || !$role_id) {
+            $this->output
+                ->set_status_header(400)
+                ->set_content_type('application/json')
+                ->set_output(json_encode([
+                    'status'    => 'error',
+                    'message'   => 'Invalid input',
+                    'csrf_hash' => $this->security->get_csrf_hash()
+                ]));
+            return;
+        }
+
+        $data = ['role_id' => $role_id, 'menu_id' => $menu_id];
+        $exists = $this->db->get_where('user_access_menu', $data)->num_rows();
+
+        if ($exists) {
+            $this->db->delete('user_access_menu', $data);
+            $message = 'Access removed';
+        } else {
+            $this->db->insert('user_access_menu', $data);
+            $message = 'Access granted';
+        }
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'status'    => 'success',
+                'message'   => $message,
+                'csrf_hash' => $this->security->get_csrf_hash()
+            ]));
+    }
+    public function deleterole()
+    {
+        // Only allow POST requests
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            show_error('Method Not Allowed', 405);
+            return;
+        }
+
+        $role_id = $this->input->post('role_id');
+
+        if (!$role_id || !is_numeric($role_id)) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Invalid role!');
+            redirect('admin/role');
+            return;
+        }
+
+        $role_id = (int) $role_id;
+
+        // Prevent deleting admin role
+        if ($role_id === 1) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Role Admin cannot be deleted!');
+            redirect('admin/role');
+            return;
+        }
+
+        // delete role and related access records
+        $this->db->delete('user_role', ['id' => $role_id]);
+        $this->db->delete('user_access_menu', ['role_id' => $role_id]);
+
         $this->session->set_flashdata('msg_type', 'success');
-        $this->session->set_flashdata('msg', '&nbsp;Access Changed!');
+        $this->session->set_flashdata('msg', '&nbsp;Role deleted!');
+        redirect('admin/role');
     }
 }

@@ -6,7 +6,11 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="<?= base_url('user') ?>" class="nav-link">Home</a>
+            <?php if ($user['role_id'] == 1) { ?>
+                <a href="<?= base_url('admin') ?>" class="nav-link">Home</a>
+            <?php } else { ?>
+                <a href="<?= base_url('user') ?>" class="nav-link">Home</a>
+            <?php } ?>
         </li>
     </ul>
 

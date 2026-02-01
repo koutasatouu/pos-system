@@ -9,7 +9,13 @@
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Home</a></li>
+                        <li class="breadcrumb-item">
+                            <?php if ($user['role_id'] == 1) {
+                                echo '<a href="' . base_url('admin') . '">Home</a>';
+                            } else {
+                                echo '<a href="' . base_url('user') . '">Home</a>';
+                            } ?>
+                        </li>
                         <li class="breadcrumb-item active">Submenu Management</li>
                     </ol>
                 </div>
@@ -49,12 +55,23 @@
                                 <tbody>
                                     <?php foreach ($submenu as $sm) : ?>
                                         <tr>
-                                            <td><?= $sm['id'] ?></td>
+                                            <td>
+                                                <?php static $i = 0;
+                                                echo ++$i; ?>
+                                            </td>
                                             <td><?= $sm['title'] ?></td>
                                             <td><?= $sm['menu'] ?></td>
-                                            <td><?= $sm['url'] ?></td>
-                                            <td><?= $sm['icon'] ?></td>
-                                            <td><?= $sm['is_active'] ?></td>
+                                            <td>
+                                                <a href="<?= base_url($sm['url']) ?>"><?= $sm['url'] ?></a>
+                                            <td>
+                                                <i class="<?= $sm['icon'] ?> text-info"></i>
+                                            </td>
+                                            <td>
+                                                <?php if ($sm['is_active'] == 1) : ?>
+                                                    <i class="fas fa-check text-success"></i>
+                                                <?php else : ?>
+                                                    <i class="fas fa-xmark text-danger"></i>
+                                                <?php endif; ?>
                                             <td>
                                                 <a href="<?= base_url('menu/edit/' . $sm['id']) ?>" class="btn btn-xs btn-primary">
                                                     <i class="fas fa-edit"></i>
@@ -122,7 +139,7 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Title</label>
+                                <label>Url</label>
                                 <input type="text" class="form-control" placeholder="Submenu url..." name="url">
                             </div>
                         </div>

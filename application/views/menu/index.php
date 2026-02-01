@@ -5,11 +5,17 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>DataTables</h1>
+                    <h1>Menu Management</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Home</a></li>
+                        <li class="breadcrumb-item">
+                            <?php if ($user['role_id'] == 1) {
+                                echo '<a href="' . base_url('admin') . '">Home</a>';
+                            } else {
+                                echo '<a href="' . base_url('user') . '">Home</a>';
+                            } ?>
+                        </li>
                         <li class="breadcrumb-item active">Menu Management</li>
                     </ol>
                 </div>
@@ -51,9 +57,17 @@
                                                 <a href="<?= base_url('menu/edit/' . $m['id']) ?>" class="btn btn-xs btn-primary">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <a href="<?= base_url('menu/delete/' . $m['id']) ?>" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure?')">
+                                                <?php
+                                                $subs = array_filter($submenu, function ($s) use ($m) {
+                                                    return $s['menu_id'] == $m['id'];
+                                                });
+                                                $subs_titles = array_map(function ($s) {
+                                                    return $s['title'];
+                                                }, $subs);
+                                                ?>
+                                                <button type="button" class="btn btn-xs btn-danger btn-delete-menu" data-id="<?= $m['id'] ?>" data-menu="<?= htmlspecialchars($m['menu'], ENT_QUOTES) ?>" data-submenus='<?= json_encode($subs_titles) ?>'>
                                                     <i class="fas fa-trash-alt"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -98,38 +112,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- textarea -->
-                    <!-- <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Textarea</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Textarea Disabled</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." disabled></textarea>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <!-- select -->
-                    <!-- <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Select</label>
-                                <select class="form-control">
-                                    <option>option 1</option>
-                                    <option>option 2</option>
-                                    <option>option 3</option>
-                                    <option>option 4</option>
-                                    <option>option 5</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -142,3 +124,53 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+<!-- edit menu modal -->
+<div class="modal fade" id="editMenuModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= base_url('menu/edit') ?>" method="post">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Menu</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" name="menu" placeholder="Title...">
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- delete menu modal -->
+<div class="modal fade" id="deleteMenuModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= base_url('menu/delete') ?>" method="post">
+                <input type="hidden" name="id" value="">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Menu</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete menu <strong class="menu-name"></strong>?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

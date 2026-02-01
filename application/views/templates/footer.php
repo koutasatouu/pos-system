@@ -66,22 +66,121 @@
         });
     });
 </script>
+<!-- role change -->
 <script>
-        $('.form-check-input').on('click',function(){
-            const menuId = $(this).data('menu');
-            const roleId = $(this).data('role');
-            $.ajax({
-                url:"<?= base_url('admin/changeaccess'); ?>",
-                type:'post',
-                data:{
-                    menuId:menuId,
-                    roleId:roleId
-                },
-                success:function(){
-                    document.location.href="<?= base_url('admin/roleaccess/');?>"+roleId;
+    var csrfName = '<?= $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = '<?= $this->security->get_csrf_hash(); ?>';
+
+    $('.form-check-input').on('click', function() {
+        const checkbox = $(this);
+        const menuId = checkbox.data('menu');
+        const roleId = checkbox.data('role');
+
+        // prepare payload and include csrf if present
+        var payload = {
+            menuId: menuId,
+            roleId: roleId
+        };
+        if (csrfName && csrfHash) payload[csrfName] = csrfHash;
+
+        checkbox.prop('disabled', true);
+
+        $.ajax({
+            url: "<?= base_url('admin/changeaccess'); ?>",
+            type: 'post',
+            data: payload,
+            dataType: 'json',
+            success: function(res) {
+                checkbox.prop('disabled', false);
+                if (res && res.status === 'success') {
+                    // update csrfHash for next requests
+                    if (res.csrf_hash) csrfHash = res.csrf_hash;
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: res.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: res.message || 'Error',
+                        showConfirmButton: false,
+                        timer: 2500
+                    });
+                    checkbox.prop('checked', !checkbox.prop('checked')); // revert
                 }
-            });
+            },
+            error: function(xhr) {
+                checkbox.prop('disabled', false);
+                var title = xhr.status === 403 ? 'Forbidden' : 'Error changing access';
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: title,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+                checkbox.prop('checked', !checkbox.prop('checked')); // revert
+            }
         });
+    });
+</script>
+<!-- img update -->
+<script>
+    $('.custom-file-input').on('change', function() {
+        let fileName = $(this).val().split('\\').pop();
+        $(this).next('.custom-file-label').addClass("selected").html(fileName);
+    });
+</script>
+<!-- edit + delete role -->
+<script>
+    $('.btn-edit-role').on('click', function() {
+        const id = $(this).data('id');
+        const role = $(this).data('role');
+        $('#editRoleModal input[name="role_id"]').val(id);
+        $('#editRoleModal input[name="role"]').val(role);
+        $('#editRoleModal').modal('show');
+    });
+
+    $('.btn-delete-role').on('click', function() {
+        const id = $(this).data('id');
+        const role = $(this).data('role');
+        const action = "<?= base_url('admin/deleterole') ?>";
+        $('#deleteRoleModal .role-name').text(role);
+        $('#deleteRoleModal form').attr('action', action);
+        $('#deleteRoleModal input[name="role_id"]').val(id);
+        $('#deleteRoleModal').modal('show');
+    });
+</script>
+<!-- menu delete -->
+<script>
+    $('.btn-delete-menu').on('click', function() {
+        const id = $(this).data('id');
+        const menu = $(this).data('menu');
+        const submenus = $(this).data('submenus');
+        $('#deleteMenuModal .menu-name').text(menu);
+        $('#deleteMenuModal input[name="id"]').val(id);
+
+        let warningHtml = '';
+        if (submenus && submenus.length > 0) {
+            warningHtml = '<div class="alert alert-warning mb-2">' +
+                '<strong>Warning:</strong> The following submenus will also be deleted:' +
+                '<ul>';
+            submenus.forEach(function(title) {
+                warningHtml += '<li>' + title + '</li>';
+            });
+            warningHtml += '</ul></div>';
+        }
+        $('#deleteMenuModal .submenu-warning').html(warningHtml);
+
+        $('#deleteMenuModal').modal('show');
+    });
 </script>
 </body>
 

@@ -14,6 +14,7 @@ class Menu extends CI_Controller
         $data['title'] = 'Menu Management';
 
         $data['menu'] = $this->db->get('user_menu')->result_array();
+        $data['submenu'] = $this->db->get('user_sub_menu')->result_array();
 
         $this->form_validation->set_rules('menu', 'Menu', 'required');
 
@@ -33,7 +34,74 @@ class Menu extends CI_Controller
             redirect('menu');
         }
     }
+    public function edit()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            show_error('Method Not Allowed', 405);
+            return;
+        }
 
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('menu', 'Menu', 'required|trim');
+
+        $id = $this->input->post('id');
+        if (!$id || !is_numeric($id)) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Invalid menu!');
+            redirect('menu');
+            return;
+        }
+        $id = (int) $id;
+
+        if ($this->form_validation->run() == false) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', validation_errors() ?: '&nbsp;Please fill all required fields!');
+            redirect('menu');
+            return;
+        }
+
+        $menuName = $this->input->post('menu', true);
+
+        $exists = $this->db->where('menu', $menuName)->where('id !=', $id)->get('user_menu')->num_rows();
+        if ($exists) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;This menu already exists!');
+            redirect('menu');
+            return;
+        }
+
+        $this->db->where('id', $id)->update('user_menu', ['menu' => $menuName]);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;Menu updated!');
+        redirect('menu');
+    }
+
+    public function delete()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            show_error('Method Not Allowed', 405);
+            return;
+        }
+
+        $id = $this->input->post('id');
+
+        if (!$id || !is_numeric($id)) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Invalid menu!');
+            redirect('menu');
+            return;
+        }
+
+        $id = (int) $id;
+
+        $this->db->delete('user_sub_menu', ['menu_id' => $id]);
+        $this->db->delete('user_menu', ['id' => $id]);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;Menu and related submenus deleted!');
+        redirect('menu');
+    }
     public function submenu()
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
