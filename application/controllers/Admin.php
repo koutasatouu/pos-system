@@ -122,8 +122,7 @@ class Admin extends CI_Controller
                 ->set_content_type('application/json')
                 ->set_output(json_encode([
                     'status'    => 'error',
-                    'message'   => 'Forbidden',
-                    'csrf_hash' => $this->security->get_csrf_hash()
+                    'message'   => 'Forbidden'
                 ]));
             return;
         }
@@ -134,8 +133,7 @@ class Admin extends CI_Controller
                 ->set_content_type('application/json')
                 ->set_output(json_encode([
                     'status'    => 'error',
-                    'message'   => 'Invalid input',
-                    'csrf_hash' => $this->security->get_csrf_hash()
+                    'message'   => 'Invalid input'
                 ]));
             return;
         }
@@ -155,8 +153,7 @@ class Admin extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode([
                 'status'    => 'success',
-                'message'   => $message,
-                'csrf_hash' => $this->security->get_csrf_hash()
+                'message'   => $message
             ]));
     }
     public function deleterole()

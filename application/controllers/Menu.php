@@ -95,13 +95,100 @@ class Menu extends CI_Controller
 
         $id = (int) $id;
 
+        // Perform deletions inside a transaction to avoid partial state
+        $this->db->trans_start();
+
+        // delete submenus belonging to this menu
         $this->db->delete('user_sub_menu', ['menu_id' => $id]);
+
+        // delete any access entries referencing this menu
+        $this->db->delete('user_access_menu', ['menu_id' => $id]);
+
+        // delete the menu itself
         $this->db->delete('user_menu', ['id' => $id]);
 
-        $this->session->set_flashdata('msg_type', 'success');
-        $this->session->set_flashdata('msg', '&nbsp;Menu and related submenus deleted!');
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === false) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Failed to delete menu!');
+        } else {
+            $this->session->set_flashdata('msg_type', 'success');
+            $this->session->set_flashdata('msg', '&nbsp;Menu and related submenus and access entries deleted!');
+        }
+
         redirect('menu');
     }
+
+    public function editsubmenu()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            show_error('Method Not Allowed', 405);
+            return;
+        }
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('title', 'Title', 'required|trim');
+        $this->form_validation->set_rules('menu_id', 'Menu', 'required|integer');
+        $this->form_validation->set_rules('url', 'URL', 'required|trim');
+        $this->form_validation->set_rules('icon', 'Icon', 'required|trim');
+
+        $id = $this->input->post('id');
+        if (!$id || !is_numeric($id)) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Invalid submenu!');
+            redirect('menu/submenu');
+            return;
+        }
+        $id = (int) $id;
+
+        if ($this->form_validation->run() == false) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', validation_errors() ?: '&nbsp;Please fill all required fields!');
+            redirect('menu/submenu');
+            return;
+        }
+
+        $data = [
+            'title' => $this->input->post('title', true),
+            'menu_id' => (int) $this->input->post('menu_id'),
+            'url' => $this->input->post('url', true),
+            'icon' => $this->input->post('icon', true),
+            'is_active' => $this->input->post('is_active') ? 1 : 0
+        ];
+
+        $this->db->where('id', $id)->update('user_sub_menu', $data);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;Submenu updated!');
+        redirect('menu/submenu');
+    }
+
+    public function deletesubmenu()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            show_error('Method Not Allowed', 405);
+            return;
+        }
+
+        $id = $this->input->post('id');
+
+        if (!$id || !is_numeric($id)) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Invalid submenu!');
+            redirect('menu/submenu');
+            return;
+        }
+
+        $id = (int) $id;
+
+        $this->db->delete('user_sub_menu', ['id' => $id]);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;Submenu deleted!');
+        redirect('menu/submenu');
+    }
+
     public function submenu()
     {
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();

@@ -68,55 +68,20 @@
 </script>
 <!-- role change -->
 <script>
-    var csrfName = '<?= $this->security->get_csrf_token_name(); ?>';
-    var csrfHash = '<?= $this->security->get_csrf_hash(); ?>';
-
     $('.form-check-input').on('click', function() {
-        const checkbox = $(this);
-        const menuId = checkbox.data('menu');
-        const roleId = checkbox.data('role');
-
-        // prepare payload and include csrf if present
-        var payload = {
-            menuId: menuId,
-            roleId: roleId
-        };
-        if (csrfName && csrfHash) payload[csrfName] = csrfHash;
-
-        checkbox.prop('disabled', true);
-
+        const menuId = $(this).data('menu');
+        const roleId = $(this).data('role');
         $.ajax({
             url: "<?= base_url('admin/changeaccess'); ?>",
             type: 'post',
-            data: payload,
-            dataType: 'json',
-            success: function(res) {
-                checkbox.prop('disabled', false);
-                if (res && res.status === 'success') {
-                    // update csrfHash for next requests
-                    if (res.csrf_hash) csrfHash = res.csrf_hash;
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: res.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                } else {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'error',
-                        title: res.message || 'Error',
-                        showConfirmButton: false,
-                        timer: 2500
-                    });
-                    checkbox.prop('checked', !checkbox.prop('checked')); // revert
-                }
+            data: {
+                menuId: menuId,
+                roleId: roleId
+            },
+            success: function() {
+                document.location.href = "<?= base_url('admin/roleaccess/'); ?>" + roleId;
             },
             error: function(xhr) {
-                checkbox.prop('disabled', false);
                 var title = xhr.status === 403 ? 'Forbidden' : 'Error changing access';
                 Swal.fire({
                     toast: true,
@@ -126,7 +91,10 @@
                     showConfirmButton: false,
                     timer: 2500
                 });
-                checkbox.prop('checked', !checkbox.prop('checked')); // revert
+                // revert checkbox state for the clicked menu/role
+                $('.form-check-input[data-menu="' + menuId + '"][data-role="' + roleId + '"]').prop('checked', function(i, val) {
+                    return !val;
+                });
             }
         });
     });
@@ -158,6 +126,45 @@
         $('#deleteRoleModal').modal('show');
     });
 </script>
+<!-- submenu add/edit/delete -->
+<script>
+    $('.btn-edit-submenu').on('click', function() {
+        const id = $(this).data('id');
+        const title = $(this).data('title');
+        const menuId = $(this).data('menu_id');
+        const url = $(this).data('url');
+        const icon = $(this).data('icon');
+        const active = $(this).data('active');
+
+        $('#editSubMenuModal input[name="id"]').val(id);
+        $('#editSubMenuModal input[name="title"]').val(title);
+        $('#editSubMenuModal select[name="menu_id"]').val(menuId);
+        $('#editSubMenuModal input[name="url"]').val(url);
+        $('#editSubMenuModal input[name="icon"]').val(icon);
+        $('#editSubMenuModal input[name="is_active"]').prop('checked', active == 1);
+        $('#editSubMenuModal').modal('show');
+    });
+
+    $('.btn-delete-submenu').on('click', function() {
+        const id = $(this).data('id');
+        const title = $(this).data('title');
+        $('#deleteSubMenuModal .submenu-name').text(title);
+        $('#deleteSubMenuModal input[name="id"]').val(id);
+        $('#deleteSubMenuModal').modal('show');
+    });
+</script>
+
+<!-- menu edit -->
+<script>
+    $('.btn-edit-menu').on('click', function() {
+        const id = $(this).data('id');
+        const menu = $(this).data('menu');
+        $('#editMenuModal input[name="id"]').val(id);
+        $('#editMenuModal input[name="menu"]').val(menu);
+        $('#editMenuModal').modal('show');
+    });
+</script>
+
 <!-- menu delete -->
 <script>
     $('.btn-delete-menu').on('click', function() {

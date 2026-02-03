@@ -73,12 +73,12 @@
                                                     <i class="fas fa-xmark text-danger"></i>
                                                 <?php endif; ?>
                                             <td>
-                                                <a href="<?= base_url('menu/edit/' . $sm['id']) ?>" class="btn btn-xs btn-primary">
+                                                <button type="button" class="btn btn-xs btn-primary btn-edit-submenu" data-id="<?= $sm['id'] ?>" data-title="<?= htmlspecialchars($sm['title'], ENT_QUOTES) ?>" data-menu_id="<?= $sm['menu_id'] ?>" data-url="<?= htmlspecialchars($sm['url'], ENT_QUOTES) ?>" data-icon="<?= htmlspecialchars($sm['icon'], ENT_QUOTES) ?>" data-active="<?= $sm['is_active'] ?>">
                                                     <i class="fas fa-edit"></i>
-                                                </a>
-                                                <a href="<?= base_url('menu/delete/' . $sm['id']) ?>" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure?')">
+                                                </button>
+                                                <button type="button" class="btn btn-xs btn-danger btn-delete-submenu" data-id="<?= $sm['id'] ?>" data-title="<?= htmlspecialchars($sm['title'], ENT_QUOTES) ?>">
                                                     <i class="fas fa-trash-alt"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -162,74 +162,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- checkbox + radio -->
-                    <!-- <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox">
-                                    <label class="form-check-label">Checkbox</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" checked>
-                                    <label class="form-check-label">Checkbox checked</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" disabled>
-                                    <label class="form-check-label">Checkbox disabled</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio1">
-                                    <label class="form-check-label">Radio</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio1" checked>
-                                    <label class="form-check-label">Radio checked</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" disabled>
-                                    <label class="form-check-label">Radio disabled</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <!-- textarea -->
-                    <!-- <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Textarea</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Textarea Disabled</label>
-                                <textarea class="form-control" rows="3" placeholder="Enter ..." disabled></textarea>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <!-- select -->
-                    <!-- <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label>Select</label>
-                                <select class="form-control">
-                                    <option>option 1</option>
-                                    <option>option 2</option>
-                                    <option>option 3</option>
-                                    <option>option 4</option>
-                                    <option>option 5</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -242,3 +174,79 @@
     <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
+
+<!-- Edit Submenu Modal -->
+<div class="modal fade" id="editSubMenuModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= base_url('menu/editsubmenu') ?>" method="post">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Submenu</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" placeholder="Title..." name="title">
+                    </div>
+                    <div class="form-group">
+                        <label>On Menu</label>
+                        <select class="form-control" name="menu_id">
+                            <?php foreach ($menu as $m) : ?>
+                                <option value="<?= $m['id'] ?>"><?= $m['menu'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Url</label>
+                        <input type="text" class="form-control" placeholder="Submenu url..." name="url">
+                    </div>
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <input type="text" class="form-control" placeholder="Icon name..." name="icon">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_active" value="1">
+                            <label class="form-check-label">Active?</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<!-- Delete Submenu Modal -->
+<div class="modal fade" id="deleteSubMenuModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= base_url('menu/deletesubmenu') ?>" method="post">
+                <input type="hidden" name="id" value="">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Submenu</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete submenu <strong class="submenu-name"></strong>?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

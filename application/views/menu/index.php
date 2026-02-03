@@ -54,9 +54,9 @@
                                             <td><?= $m['id'] ?></td>
                                             <td><?= $m['menu'] ?></td>
                                             <td>
-                                                <a href="<?= base_url('menu/edit/' . $m['id']) ?>" class="btn btn-xs btn-primary">
+                                                <button type="button" class="btn btn-xs btn-primary btn-edit-menu" data-id="<?= $m['id'] ?>" data-menu="<?= htmlspecialchars($m['menu'], ENT_QUOTES) ?>">
                                                     <i class="fas fa-edit"></i>
-                                                </a>
+                                                </button>
                                                 <?php
                                                 $subs = array_filter($submenu, function ($s) use ($m) {
                                                     return $s['menu_id'] == $m['id'];
