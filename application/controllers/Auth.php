@@ -10,19 +10,14 @@ class Auth extends CI_Controller
     }
     public function index()
     {
-        if ($this->session->userdata('email')) {
-            redirect('user');
-        }
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
-        $this->form_validation->set_rules('password', 'Password', 'required|trim');
-        if ($this->form_validation->run() == false) {
-            $data['title'] = 'POS-System User Login';
-            $this->load->view('templates/auth_header', $data);
-            $this->load->view('auth/login');
-            $this->load->view('templates/auth_footer');
-        } else {
-            $this->_login();
-        }
+        $data['title'] = 'POS-System User Login';
+        $this->load->view('templates/auth_header', $data);
+        $this->load->view('auth/login');
+        $this->load->view('templates/auth_footer');
+    }
+    public function masking()
+    {
+        $this->_login();
     }
     private function _login()
     {

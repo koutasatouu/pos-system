@@ -7,7 +7,7 @@
         <div class="card-body">
             <p class="login-box-msg">Sign in to start your session</p>
 
-            <form action="<?= base_url('auth') ?>" method="post">
+            <form action="<?= base_url('login_check') ?>" method="post">
 
                 <div class="input-group">
                     <input type="email" class="form-control" placeholder="Email" name="email" id="email" value="<?= set_value('email') ?>">
