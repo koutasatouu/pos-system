@@ -21,12 +21,9 @@
     <section class="content">
 
         <!-- left column -->
-        <div class="col-md-6">
+        <div class="col-md-3">
             <!-- general form elements -->
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Change Your Password</h3>
-                </div>
+            <div class="card card-primary card-outline">
                 <!-- /.card-header -->
                 <!-- form start -->
                 <?= form_open('user/changePassword') ?>

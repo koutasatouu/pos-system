@@ -54,7 +54,7 @@
                                             <td><?= $m['id'] ?></td>
                                             <td><?= $m['menu'] ?></td>
                                             <td>
-                                                <button type="button" class="btn btn-xs btn-primary btn-edit-menu" data-id="<?= $m['id'] ?>" data-menu="<?= htmlspecialchars($m['menu'], ENT_QUOTES) ?>">
+                                                <button type="button" class="btn btn-xs btn-primary btn-edit-menu" data-id="<?= $m['id'] ?>" data-menu="<?= htmlspecialchars($m['menu'], ENT_QUOTES) ?>" disabled>
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <?php

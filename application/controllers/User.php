@@ -45,10 +45,13 @@ class User extends CI_Controller
         } else {
             $name = $this->input->post('name');
             $email = $this->input->post('email');
+            $phone_number = $this->input->post('phone_number');
+            $about = $this->input->post('about');
 
             $upload_image = $_FILES['image']['name'];
 
             if ($upload_image) {
+
                 $config['allowed_types'] = 'gif|jpg|png|jpeg';
                 $config['max_size']      = '2048';
                 $config['upload_path']   = './assets/img/profile/';
@@ -56,6 +59,7 @@ class User extends CI_Controller
                 $this->load->library('upload', $config);
 
                 if ($this->upload->do_upload('image')) {
+
                     $old_image = $data['user']['image'];
                     if ($old_image != 'default.jpg') {
                         unlink(FCPATH . 'assets/img/profile/' . $old_image);
@@ -63,12 +67,28 @@ class User extends CI_Controller
 
                     $new_image = $this->upload->data('file_name');
                     $this->db->set('image', $new_image);
+
+                    $config_resize = [
+                        'image_library'  => 'gd2',
+                        'source_image'   => './assets/img/profile/' . $new_image,
+                        'create_thumb'   => FALSE,
+                        'maintain_ratio' => TRUE,
+                        'width'          => 500,
+                        'height'         => 500,
+                        'quality'        => '60%',
+                    ];
+
+                    $this->load->library('image_lib', $config_resize);
+                    $this->image_lib->resize();
+                    $this->image_lib->clear();
                 } else {
                     echo $this->upload->display_errors();
                 }
             }
 
             $this->db->set('name', $name);
+            $this->db->set('phone_number', $phone_number);
+            $this->db->set('about', $about);
             $this->db->where('email', $email);
             $this->db->update('user');
 
@@ -106,7 +126,7 @@ class User extends CI_Controller
                     $this->session->set_flashdata('msg', '&nbsp;New password cannot be the same as current password!');
                     redirect('user/changepassword');
                 } else {
-                    // password is ok
+
                     $password_hash = password_hash($new_password, PASSWORD_DEFAULT);
 
                     $this->db->set('password', $password_hash);

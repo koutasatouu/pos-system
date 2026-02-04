@@ -21,7 +21,11 @@
                 <img src="<?= base_url('assets/img/profile/') . $user['image'] ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block"><?= $user['name'] ?></a>
+                <?php if ($this->session->userdata('role_id') == 1) : ?>
+                    <a href="<?= base_url('user') ?>" class="d-block"><?= $user['name'] ?></a>
+                <?php else : ?>
+                    <a href="<?= base_url('user') ?>" class="d-block"><?= $user['name'] ?></a>
+                <?php endif; ?>
             </div>
         </div>
 

@@ -1,6 +1,4 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -10,26 +8,19 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
-                            <?php if ($user['role_id'] == 1) {
-                                echo '<a href="' . base_url('admin') . '">Home</a>';
-                            } else {
-                                echo '<a href="' . base_url('user') . '">Home</a>';
-                            } ?>
+                            <a href="<?= base_url($user['role_id'] == 1 ? 'admin' : 'user') ?>">Home</a>
                         </li>
                         <li class="breadcrumb-item active">My Profile</li>
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
-
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-3">
-                    <!-- Profile Image -->
+                <div class="col-md-4">
                     <div class="card card-primary card-outline">
                         <div class="card-body box-profile">
                             <div class="text-center">
@@ -39,48 +30,68 @@
                             <h3 class="profile-username text-center"><?= $user['name'] ?></h3>
 
                             <p class="text-muted text-center">
-                                <?php if ($user['role_id'] == 1) {
-                                    echo "Administrator";
-                                } else {
-                                    echo "Member";
-                                } ?>
+                                <?= $user['role_id'] == 1 ? "Administrator" : "Member" ?>
                             </p>
 
                             <ul class="list-group list-group-unbordered mb-3">
                                 <li class="list-group-item">
-                                    <b>Followers</b> <a class="float-right">1,322</a>
+                                    <b>Email</b> <a class="float-right"><?= $user['email'] ?></a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Following</b> <a class="float-right">543</a>
+                                    <b>Member Since</b> <a class="float-right"><?= date('d F Y', $user['date_created']); ?></a>
                                 </li>
                                 <li class="list-group-item">
-                                    <b>Friends</b> <a class="float-right">13,287</a>
+                                    <b>Status</b>
+                                    <a class="float-right">
+                                        <?php if ($user['is_active'] == 1) : ?>
+                                            <span class="badge badge-success">Active</span>
+                                        <?php else : ?>
+                                            <span class="badge badge-danger">Inactive</span>
+                                        <?php endif; ?>
+                                    </a>
                                 </li>
                             </ul>
 
-                            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+                            <a href="<?= base_url('user/edit') ?>" class="btn btn-primary btn-block"><b>Edit Profile</b></a>
+                            <a href="<?= base_url('user/changepassword') ?>" class="btn btn-warning btn-block"><b>Change Password</b></a>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <!-- Profile Image -->
-                    <div class="card card-danger card-outline">
-                        <div class="card-body box-profile">
 
+                <div class="col-md-8">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">About Me</h3>
+                        </div>
+                        <div class="card-body">
+                            <strong><i class="fas fa-book mr-1"></i> Biography</strong>
+                            <p class="text-muted">
+                                <?= $user['about'] ? $user['about'] : '<span class="font-italic text-black-50">No biography added yet.</span>' ?>
+                            </p>
+
+                            <hr>
+
+                            <strong><i class="fas fa-phone mr-1"></i> Phone Number</strong>
+                            <p class="text-muted">
+                                <?= $user['phone_number'] ? $user['phone_number'] : '<span class="font-italic text-black-50">No phone number.</span>' ?>
+                            </p>
+
+                            <hr>
+
+                            <strong><i class="fas fa-map-marker-alt mr-1"></i> Account Type</strong>
+                            <p class="text-muted">
+                                <?= $user['role_id'] == 1 ? "System Administrator" : "Standard User" ?>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
                             <a href="<?= base_url('user/logout') ?>" class="btn btn-danger btn-block"><b>Logout</b></a>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
             </div>
         </div>
-
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->

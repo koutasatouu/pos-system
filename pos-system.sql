@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 03 Feb 2026 pada 10.48
+-- Waktu pembuatan: 04 Feb 2026 pada 17.34
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -31,7 +31,9 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
   `email` varchar(128) NOT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
   `image` varchar(128) NOT NULL,
+  `about` text DEFAULT NULL,
   `password` varchar(256) NOT NULL,
   `role_id` int(11) NOT NULL,
   `is_active` int(11) NOT NULL,
@@ -42,9 +44,9 @@ CREATE TABLE `user` (
 -- Dumping data untuk tabel `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `email`, `image`, `password`, `role_id`, `is_active`, `date_created`) VALUES
-(1, 'radit', 'radityaabib511@gmail.com', '30840e21fd340897e4f78b157f44558b.jpg', '$2y$10$pOX7F4JOY3hSaSJ6TcHQi.RGAITVF/dj7tP3MBDjowwMvwPj1/f92', 1, 1, 1769805949),
-(2, 'raihan', 'raihanrafi@gmail.com', 'default.jpg', '$2y$10$a0XMWHHJzBYEWBnm.X3nPuNRyxvPu57naTn5osn97dTt.4XLsN4Oi', 2, 1, 1769806089);
+INSERT INTO `user` (`id`, `name`, `email`, `phone_number`, `image`, `about`, `password`, `role_id`, `is_active`, `date_created`) VALUES
+(1, 'radit', 'radityaabib511@gmail.com', '08234566789', '30840e21fd340897e4f78b157f44558b.jpg', 'I\'m an Admin', '$2y$10$pOX7F4JOY3hSaSJ6TcHQi.RGAITVF/dj7tP3MBDjowwMvwPj1/f92', 1, 1, 1769805949),
+(2, 'raihan', 'raihanrafi@gmail.com', '08872356823', 'WhatsApp_Image_2025-07-18_at_21_59_54_3ad28626.jpg', 'memek', '$2y$10$a0XMWHHJzBYEWBnm.X3nPuNRyxvPu57naTn5osn97dTt.4XLsN4Oi', 2, 1, 1769806089);
 
 -- --------------------------------------------------------
 
@@ -64,10 +66,10 @@ CREATE TABLE `user_access_menu` (
 
 INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 (1, 1, 1),
-(4, 1, 3),
 (12, 1, 2),
 (19, 2, 2),
-(36, 2, 3);
+(38, 2, 3),
+(39, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -184,7 +186,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_menu`
@@ -202,7 +204,7 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
