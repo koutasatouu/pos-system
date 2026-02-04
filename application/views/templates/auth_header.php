@@ -17,6 +17,15 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="<?= base_url('assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/plugins/toastr/toastr.min.css') ?>">
+    <style>
+        body {
+            background-image: url("<?= base_url() ?>/assets/img/page/login/login.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
 </head>
 
-<body class="hold-transition login-page">
+<body class="hold-transition login-page dark-mode">
