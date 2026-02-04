@@ -22,6 +22,6 @@
 
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini dark-mode">
     <!-- Site wrapper -->
     <div class="wrapper">
