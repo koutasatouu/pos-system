@@ -48,7 +48,7 @@
                 <a href="">I forgot my password</a>
             </p>
             <p class="mb-0">
-                <a href="<?= base_url('auth/registration') ?>" class="text-center">Register a new membership</a>
+                <a href="<?= base_url('registration') ?>" class="text-center">Register a new membership</a>
             </p>
 
         </div>

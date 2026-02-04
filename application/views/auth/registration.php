@@ -58,7 +58,7 @@
                     <!-- /.col -->
                 </div>
             </form>
-            <a href="<?= base_url('auth') ?>" class="text-center">I already have an account</a>
+            <a href="<?= base_url('') ?>" class="text-center">I already have an account</a>
         </div>
         <!-- /.form-box -->
     </div><!-- /.card -->
