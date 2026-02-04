@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 04, 2026 at 10:20 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- Waktu pembuatan: 04 Feb 2026 pada 22.41
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Struktur dari tabel `user`
 --
 
 CREATE TABLE `user` (
@@ -41,7 +41,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
+-- Dumping data untuk tabel `user`
 --
 
 INSERT INTO `user` (`id`, `name`, `email`, `phone_number`, `image`, `about`, `password`, `role_id`, `is_active`, `date_created`) VALUES
@@ -51,7 +51,7 @@ INSERT INTO `user` (`id`, `name`, `email`, `phone_number`, `image`, `about`, `pa
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_access_menu`
+-- Struktur dari tabel `user_access_menu`
 --
 
 CREATE TABLE `user_access_menu` (
@@ -61,7 +61,7 @@ CREATE TABLE `user_access_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user_access_menu`
+-- Dumping data untuk tabel `user_access_menu`
 --
 
 INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
@@ -74,7 +74,7 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_menu`
+-- Struktur dari tabel `user_menu`
 --
 
 CREATE TABLE `user_menu` (
@@ -83,7 +83,7 @@ CREATE TABLE `user_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user_menu`
+-- Dumping data untuk tabel `user_menu`
 --
 
 INSERT INTO `user_menu` (`id`, `menu`) VALUES
@@ -94,7 +94,7 @@ INSERT INTO `user_menu` (`id`, `menu`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_role`
+-- Struktur dari tabel `user_role`
 --
 
 CREATE TABLE `user_role` (
@@ -103,7 +103,7 @@ CREATE TABLE `user_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user_role`
+-- Dumping data untuk tabel `user_role`
 --
 
 INSERT INTO `user_role` (`id`, `role`) VALUES
@@ -113,7 +113,7 @@ INSERT INTO `user_role` (`id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_sub_menu`
+-- Struktur dari tabel `user_sub_menu`
 --
 
 CREATE TABLE `user_sub_menu` (
@@ -126,7 +126,7 @@ CREATE TABLE `user_sub_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user_sub_menu`
+-- Dumping data untuk tabel `user_sub_menu`
 --
 
 INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active`) VALUES
@@ -141,7 +141,7 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_token`
+-- Struktur dari tabel `user_token`
 --
 
 CREATE TABLE `user_token` (
@@ -156,80 +156,80 @@ CREATE TABLE `user_token` (
 --
 
 --
--- Indexes for table `user`
+-- Indeks untuk tabel `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_access_menu`
+-- Indeks untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_menu`
+-- Indeks untuk tabel `user_menu`
 --
 ALTER TABLE `user_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_role`
+-- Indeks untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_sub_menu`
+-- Indeks untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `user_token`
+-- Indeks untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `user_access_menu`
+-- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
--- AUTO_INCREMENT for table `user_menu`
+-- AUTO_INCREMENT untuk tabel `user_menu`
 --
 ALTER TABLE `user_menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
--- AUTO_INCREMENT for table `user_role`
+-- AUTO_INCREMENT untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `user_sub_menu`
+-- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `user_token`
+-- AUTO_INCREMENT untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -32,10 +32,10 @@ class Auth extends CI_Controller
         if ($user) {
             if ($user['is_active'] == 1) {
                 if (password_verify($password, $user['password'])) {
-                    if(!empty($this->input->post('remember'))){
-                        setcookie("loginId", $email, time()+(10*365*24*60*60));
-                        setcookie("loginPass", $password, time()+(10*365*24*60*60));
-                    }else{
+                    if (!empty($this->input->post('remember'))) {
+                        setcookie("loginId", $email, time() + (10 * 365 * 24 * 60 * 60));
+                        setcookie("loginPass", $password, time() + (10 * 365 * 24 * 60 * 60));
+                    } else {
                         setcookie("loginId", "");
                         setcookie("loginPass", "");
                     }
@@ -89,7 +89,7 @@ class Auth extends CI_Controller
             $this->load->view('auth/registration');
             $this->load->view('templates/auth_footer');
         } else {
-            $email = $this->input->post('email',true);
+            $email = $this->input->post('email', true);
             $data = [
                 'name' => htmlspecialchars($this->input->post('name', true)),
                 'email' => htmlspecialchars($this->input->post('email', true)),
@@ -106,7 +106,7 @@ class Auth extends CI_Controller
                 'date_created' => time()
             ];
             $this->db->insert('user', $data);
-            $this->db->insert('user_token',$user_token);
+            $this->db->insert('user_token', $user_token);
             $this->_sendEmail($token, 'verify');
             $this->session->set_flashdata('msg_type', 'success');
             $this->session->set_flashdata('msg', 'Congratulations! Your account has been created. Please activate your account.');
@@ -117,59 +117,59 @@ class Auth extends CI_Controller
     {
         $email = $this->input->get('email');
         $token = $this->input->get('token');
-        $user = $this->db->get_where('user',['email' => $email])->row_array();
-        if($user){
-            $user_token = $this->db->get_where('user_token',['token' => $token])->row_array();
-            if($user_token){
-                if(time() - $user_token['date_created'] < (60*60*24)){
-                    $this->db->set('is_active',1);
-                    $this->db->where('email',$email);
-                    $this->db->updated('user');
+        $user = $this->db->get_where('user', ['email' => $email])->row_array();
+        if ($user) {
+            $user_token = $this->db->get_where('user_token', ['token' => $token])->row_array();
+            if ($user_token) {
+                if (time() - $user_token['date_created'] < (60 * 60 * 24)) {
+                    $this->db->set('is_active', 1);
+                    $this->db->where('email', $email);
+                    $this->db->update('user');
                     $this->db->delete('user_token', ['email' => $email]);
                     $this->session->set_flashdata('msg_type', 'success');
-                    $this->session->set_flashdata('msg', '&nbsp;'.$email.' has been activated! Please login.');
+                    $this->session->set_flashdata('msg', '&nbsp;' . $email . ' has been activated! Please login.');
                     redirect('');
-                }else{
+                } else {
                     $this->db->delete('user', ['email' => $email]);
                     $this->db->delete('user_token', ['email' => $email]);
                     $this->session->set_flashdata('msg_type', 'error');
                     $this->session->set_flashdata('msg', '&nbsp;Account activation failed! Token expired.');
                     redirect('');
                 }
-            }else{
+            } else {
                 $this->session->set_flashdata('msg_type', 'error');
                 $this->session->set_flashdata('msg', '&nbsp;Account activation failed! Wrong token.');
                 redirect('');
             }
-        }else{
+        } else {
             $this->session->set_flashdata('msg_type', 'error');
             $this->session->set_flashdata('msg', '&nbsp;Account activation failed! Wrong email.');
             redirect('');
         }
     }
-    private function _sendEmail($token,$type)
+    private function _sendEmail($token, $type)
     {
         $config = [
-            'protocol' => 'smtp',
+            'protocol'  => 'smtp',
             'smtp_host' => 'ssl://smtp.googlemail.com',
             'smtp_user' => 'akuabib25@gmail.com',
-            'smtp_pass' => 'akuabibyangasli120',
+            'smtp_pass' => 'tquragzopkbiywql',
             'smtp_port' => 465,
-            'mailtype' => 'html',
-            'charset' => 'utf-8',
-            'newline' => '\r\n'
+            'mailtype'  => 'html',
+            'charset'   => 'utf-8',
+            'newline'   => "\r\n"
         ];
-        $this->load->library('email',$config);
+        $this->load->library('email', $config);
         $this->email->initialize($config);
-        $this->email->from('akuabib25@gmail.com','POS-System');
+        $this->email->from('akuabib25@gmail.com', 'POS-System');
         $this->email->to($this->input->post('email'));
-        if($type == 'verify'){
+        if ($type == 'verify') {
             $this->email->subject('Account Verification');
-            $this->email->message('Click this link to verify your account : <a href="'.base_url().'auth/verify?email='.$this->input->post('email').'&token='.urlencode($token).'">Activate</a>');
+            $this->email->message('Click this link to verify your account : <a href="' . base_url() . 'auth/verify?email=' . $this->input->post('email') . '&token=' . urlencode($token) . '">Activate</a>');
         }
-        if($this->email->send()){
+        if ($this->email->send()) {
             return true;
-        }else{
+        } else {
             echo $this->email->print_debugger();
             die;
         }
