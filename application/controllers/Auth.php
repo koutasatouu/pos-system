@@ -29,6 +29,13 @@ class Auth extends CI_Controller
         if ($user) {
             if ($user['is_active'] == 1) {
                 if (password_verify($password, $user['password'])) {
+                    if(!empty($this->input->post('remember'))){
+                        setcookie("loginId", $email, time()+(10*365*24*60*60));
+                        setcookie("loginPass", $password, time()+(10*365*24*60*60));
+                    }else{
+                        setcookie("loginId", "");
+                        setcookie("loginPass", "");
+                    }
                     $data = [
                         'email' => $user['email'],
                         'role_id' => $user['role_id']
