@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 04 Feb 2026 pada 23.20
+-- Waktu pembuatan: 05 Feb 2026 pada 00.20
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -47,7 +47,7 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `name`, `email`, `phone_number`, `image`, `about`, `password`, `role_id`, `is_active`, `date_created`) VALUES
 (1, 'radit', 'radityaabib511@gmail.com', '08234566789', '30840e21fd340897e4f78b157f44558b.jpg', 'I\'m an Admin', '$2y$10$pOX7F4JOY3hSaSJ6TcHQi.RGAITVF/dj7tP3MBDjowwMvwPj1/f92', 1, 1, 1769805949),
 (2, 'raihan', 'raihanrafi@gmail.com', '08872356823', 'WhatsApp_Image_2025-07-18_at_21_59_54_3ad28626.jpg', 'memek', '$2y$10$a0XMWHHJzBYEWBnm.X3nPuNRyxvPu57naTn5osn97dTt.4XLsN4Oi', 2, 1, 1769806089),
-(17, 'abib', 'abibgamer30@gmail.com', NULL, 'default.jpg', NULL, '$2y$10$L5JkFzPxZaZ5Ca5Y9U8piOQT5s3cLyeW4D75qmpkqJygiwNCuhwle', 2, 1, 1770243149);
+(18, 'Raditya Abib Shanau', 'abibgamer30@gmail.com', NULL, 'default.jpg', NULL, '$2y$10$cHiFoVcAe02bwkM.HV4UZuvGHPIKdPdq6IO1BIlaYX9ndXRRTTAs2', 2, 1, 1770247058);
 
 -- --------------------------------------------------------
 
@@ -200,7 +200,7 @@ ALTER TABLE `user_token`
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
@@ -230,7 +230,7 @@ ALTER TABLE `user_sub_menu`
 -- AUTO_INCREMENT untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

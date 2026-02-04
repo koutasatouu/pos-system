@@ -55,3 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route[''] = 'auth';
 $route['registration'] = 'auth/registration';
 $route['login_check'] = 'auth/masking';
+$route['forgot_password'] = 'auth/forgotPassword';
+$route['terms_and_condition'] = 'auth/terms';
+$route['verify'] = 'auth/verify';
+$route['resetPassword'] = 'auth/resetPassword';

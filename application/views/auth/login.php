@@ -10,7 +10,11 @@
             <form action="<?= base_url('login_check') ?>" method="post">
 
                 <div class="input-group">
-                    <input type="email" class="form-control" placeholder="Email" name="email" id="email" value="<?php if(isset($_COOKIE["loginId"])){echo $_COOKIE["loginId"];}else{echo set_value('');} ?>">
+                    <input type="email" class="form-control" placeholder="Email" name="email" id="email" value="<?php if (isset($_COOKIE["loginId"])) {
+                                                                                                                    echo $_COOKIE["loginId"];
+                                                                                                                } else {
+                                                                                                                    echo set_value('');
+                                                                                                                } ?>">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -19,7 +23,9 @@
                 </div>
                 <?= form_error('email', '<small class="text-danger">', '</small>') ?>
                 <div class="input-group mt-3">
-                    <input type="password" class="form-control" placeholder="Password" name="password" id="password"value="<?php if(isset($_COOKIE["loginPass"])){echo $_COOKIE["loginPass"];}?>">
+                    <input type="password" class="form-control" placeholder="Password" name="password" id="password" value="<?php if (isset($_COOKIE["loginPass"])) {
+                                                                                                                                echo $_COOKIE["loginPass"];
+                                                                                                                            } ?>">
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -30,7 +36,9 @@
                 <div class="row mt-3">
                     <div class="col-8">
                         <div class="icheck-primary">
-                            <input type="checkbox" id="remember"name="remember"<?php if(isset($_COOKIE["loginId"])){echo "checked";} ?>>
+                            <input type="checkbox" id="remember" name="remember" <?php if (isset($_COOKIE["loginId"])) {
+                                                                                        echo "checked";
+                                                                                    } ?>>
                             <label for="remember">
                                 Remember Me
                             </label>
@@ -45,7 +53,7 @@
             </form>
 
             <p class="mb-1">
-                <a href="">I forgot my password</a>
+                <a href="<?= base_url('forgot_password') ?>">I forgot my password</a>
             </p>
             <p class="mb-0">
                 <a href="<?= base_url('registration') ?>" class="text-center">Register a new membership</a>

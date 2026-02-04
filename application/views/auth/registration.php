@@ -50,12 +50,11 @@
                                 I agree to the <a href="<?= base_url('auth/terms') ?>">terms</a>
                             </label>
                         </div>
+                        <?= form_error('terms', '<small class="text-danger">', '</small>') ?>
                     </div>
-                    <!-- /.col -->
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">Register</button>
                     </div>
-                    <!-- /.col -->
                 </div>
             </form>
             <a href="<?= base_url('') ?>" class="text-center">I already have an account</a>

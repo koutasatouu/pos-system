@@ -89,6 +89,9 @@ class Auth extends CI_Controller
             'min_length' => 'Password too short!'
         ]);
         $this->form_validation->set_rules('confirm_password', 'Password Confirmation', 'required|trim|matches[password]');
+        $this->form_validation->set_rules('terms', 'Terms and Conditions', 'required', [
+            'required' => 'You must agree to the Terms and Conditions!'
+        ]);
 
         if ($this->form_validation->run() == false) {
             $data['title'] = 'POS-System User Registration';
@@ -154,6 +157,95 @@ class Auth extends CI_Controller
             redirect('');
         }
     }
+
+    public function forgotPassword()
+    {
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'Forgot Password';
+            $this->load->view('templates/auth_header', $data);
+            $this->load->view('auth/forgot-password');
+            $this->load->view('templates/auth_footer');
+        } else {
+            $email = $this->input->post('email');
+            $user = $this->db->get_where('user', ['email' => $email])->row_array();
+            if ($user) {
+                if ($user['is_active'] == 1) {
+                    $token = base64_encode(random_bytes(32));
+                    $user_token = [
+                        'email' => $email,
+                        'token' => $token,
+                        'date_created' => time()
+                    ];
+                    $this->db->insert('user_token', $user_token);
+                    $this->_sendEmail($token, 'forgot');
+                    $this->session->set_flashdata('msg_type', 'success');
+                    $this->session->set_flashdata('msg', '&nbsp;Please check your email to reset your password!');
+                    redirect('forgot_password');
+                } else {
+                    $this->session->set_flashdata('msg_type', 'warning');
+                    $this->session->set_flashdata('msg', '&nbsp;This email has not been activated!');
+                    redirect('forgot_password');
+                }
+            } else {
+                $this->session->set_flashdata('msg_type', 'warning');
+                $this->session->set_flashdata('msg', '&nbsp;Email is not registered!');
+                redirect('forgot_password');
+            }
+        }
+    }
+
+    public function resetPassword()
+    {
+        $email = $this->input->get('email');
+        $token = $this->input->get('token');
+        $user = $this->db->get_where('user', ['email' => $email])->row_array();
+        if ($user) {
+            $user_token = $this->db->get_where('user_token', ['token' => $token])->row_array();
+            if ($user_token) {
+                $this->session->set_userdata('reset_email', $email);
+                $this->changePassword();
+            } else {
+                $this->session->set_flashdata('msg_type', 'error');
+                $this->session->set_flashdata('msg', '&nbsp;Reset password failed! Wrong token.');
+                redirect('');
+            }
+        } else {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;Reset password failed! Wrong email.');
+            redirect('');
+        }
+    }
+
+    public function changePassword()
+    {
+        if (!$this->session->userdata('reset_email')) {
+            redirect('');
+        }
+        $this->form_validation->set_rules('password', 'Password', 'required|trim|min_length[6]|matches[confirm_password]', [
+            'matches' => 'Password dont match!',
+            'min_length' => 'Password too short!'
+        ]);
+        $this->form_validation->set_rules('confirm_password', 'Password Confirmation', 'required|trim|matches[password]');
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'Change Password';
+            $this->load->view('templates/auth_header', $data);
+            $this->load->view('auth/change-password');
+            $this->load->view('templates/auth_footer');
+        } else {
+            $password = password_hash($this->input->post('password'), PASSWORD_DEFAULT);
+            $email = $this->session->userdata('reset_email');
+            $this->db->set('password', $password);
+            $this->db->where('email', $email);
+            $this->db->update('user');
+            $this->db->delete('user_token', ['email' => $email]);
+            $this->session->unset_userdata('reset_email');
+            $this->session->set_flashdata('msg_type', 'success');
+            $this->session->set_flashdata('msg', '&nbsp;Password has been changed! Please login.');
+            redirect('');
+        }
+    }
+
     private function _sendEmail($token, $type)
     {
         $config = [
@@ -174,7 +266,7 @@ class Auth extends CI_Controller
 
         if ($type == 'verify') {
             $email = $this->input->post('email');
-            $link = base_url() . 'auth/verify?email=' . $email . '&token=' . urlencode($token);
+            $link = base_url() . 'verify?email=' . $email . '&token=' . urlencode($token);
 
             $this->email->subject('Activate Your Account - POS System');
 
@@ -223,6 +315,56 @@ class Auth extends CI_Controller
             </html>';
 
             $this->email->message($message);
+        } else if ($type == 'forgot') {
+            $email = $this->input->post('email');
+            $link = base_url() . 'resetPassword?email=' . $email . '&token=' . urlencode($token);
+
+            $this->email->subject('Reset Your Password - POS System');
+
+            $message = '
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: "Source Sans Pro", Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; }
+                    .wrapper { padding: 20px; }
+                    .container { max-width: 500px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 5px solid #007bff; }
+                    .header { text-align: center; margin-bottom: 20px; }
+                    .header h2 { color: #333; margin: 0; }
+                    .content { color: #555; line-height: 1.6; text-align: center; }
+                    .btn { display: inline-block; background-color: #007bff; color: #ffffff !important; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; margin-bottom: 20px; }
+                    .btn:hover { background-color: #0056b3; }
+                    .footer { text-align: center; font-size: 12px; color: #999; margin-top: 20px; }
+                    .link-text { font-size: 12px; color: #999; word-break: break-all; margin-top: 10px; }
+                </style>
+            </head>
+            <body>
+                <div class="wrapper">
+                    <div class="container">
+                        <div class="header">
+                            <h2>POS System</h2>
+                        </div>
+                        <div class="content">
+                            <h3>Password Reset Request</h3>
+                            <p>We received a request to reset your password. Click the button below to proceed.</p>
+                            
+                            <a href="' . $link . '" class="btn">Reset My Password</a>
+                            
+                            <p>If the button works, you can ignore this email.</p>
+                            
+                            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                            
+                            <p class="link-text">If the button doesn\'t work, copy and paste this link into your browser:<br>
+                            ' . $link . '</p>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        &copy; ' . date('Y') . ' POS-System. All rights reserved.
+                    </div>
+                </div>
+            </body>
+            </html>';
+            $this->email->message($message);
         }
 
         if ($this->email->send()) {
@@ -232,6 +374,7 @@ class Auth extends CI_Controller
             die;
         }
     }
+
     public function blocked()
     {
         $this->load->view('auth/blocked');
