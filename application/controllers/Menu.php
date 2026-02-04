@@ -17,12 +17,14 @@ class Menu extends CI_Controller
         $data['menu'] = $this->db->get('user_menu')->result_array();
         $data['submenu'] = $this->db->get('user_sub_menu')->result_array();
 
-        $this->form_validation->set_rules('menu', 'Menu', 'required');
+        $this->form_validation->set_rules('menu', 'Menu', 'required|is_unique[user_menu.menu]', [
+            'is_unique' => 'This menu name already exists!'
+        ]);
 
         if ($this->form_validation->run() == false) {
             if (validation_errors()) {
                 $this->session->set_flashdata('msg_type', 'error');
-                $this->session->set_flashdata('msg', '&nbsp;Please fill all required fields!');
+                $this->session->set_flashdata('msg', validation_errors());
                 redirect('menu');
             }
             $this->load->view('templates/header', $data);
@@ -36,48 +38,6 @@ class Menu extends CI_Controller
             $this->session->set_flashdata('msg', '&nbsp;New menu added!');
             redirect('menu');
         }
-    }
-
-    public function edit()
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            show_error('Method Not Allowed', 405);
-            return;
-        }
-
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('menu', 'Menu', 'required|trim');
-
-        $id = $this->input->post('id');
-        if (!$id || !is_numeric($id)) {
-            $this->session->set_flashdata('msg_type', 'error');
-            $this->session->set_flashdata('msg', '&nbsp;Invalid menu!');
-            redirect('menu');
-            return;
-        }
-        $id = (int) $id;
-
-        if ($this->form_validation->run() == false) {
-            $this->session->set_flashdata('msg_type', 'error');
-            $this->session->set_flashdata('msg', validation_errors() ?: '&nbsp;Please fill all required fields!');
-            redirect('menu');
-            return;
-        }
-
-        $menuName = $this->input->post('menu', true);
-        $exists = $this->db->where('menu', $menuName)->where('id !=', $id)->get('user_menu')->num_rows();
-        if ($exists) {
-            $this->session->set_flashdata('msg_type', 'error');
-            $this->session->set_flashdata('msg', '&nbsp;This menu already exists!');
-            redirect('menu');
-            return;
-        }
-
-        $this->db->where('id', $id)->update('user_menu', ['menu' => $menuName]);
-
-        $this->session->set_flashdata('msg_type', 'success');
-        $this->session->set_flashdata('msg', '&nbsp;Menu updated!');
-        redirect('menu');
     }
 
     public function delete()
@@ -130,14 +90,12 @@ class Menu extends CI_Controller
         $this->form_validation->set_rules('icon', 'Icon', 'required');
 
         if ($this->form_validation->run() == false) {
-            // FIX: Only set flashdata and redirect if there was an actual failed attempt
             if (validation_errors()) {
                 $this->session->set_flashdata('msg_type', 'error');
                 $this->session->set_flashdata('msg', '&nbsp;Please fill all required fields!');
                 redirect('menu/submenu');
             }
 
-            // Normal Page Load
             $this->load->view('templates/header', $data);
             $this->load->view('templates/topbar', $data);
             $this->load->view('templates/sidebar', $data);

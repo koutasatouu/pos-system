@@ -1,6 +1,4 @@
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -21,10 +19,8 @@
                 </div>
             </div>
         </div>
-        <!-- /.container-fluid -->
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -35,7 +31,6 @@
                                 If you want it, then you'll have to take it
                             </h3>
                         </div>
-                        <!-- /.card-header -->
                         <div class="card-body">
                             <button class="btn btn-sm btn-info mb-2" data-toggle="modal" data-target="#menuModal">
                                 <i class="fas fa-plus"></i> Add New Menu
@@ -54,9 +49,6 @@
                                             <td><?= $m['id'] ?></td>
                                             <td><?= $m['menu'] ?></td>
                                             <td>
-                                                <button type="button" class="btn btn-xs btn-primary btn-edit-menu" data-id="<?= $m['id'] ?>" data-menu="<?= htmlspecialchars($m['menu'], ENT_QUOTES) ?>" disabled>
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
                                                 <?php
                                                 $subs = array_filter($submenu, function ($s) use ($m) {
                                                     return $s['menu_id'] == $m['id'];
@@ -81,17 +73,12 @@
                                 </tfoot>
                             </table>
                         </div>
-                        <!-- /.card-body -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- /.content -->
 </div>
-<!-- /.content-wrapper -->
-
-<!-- /.modal -->
 <div class="modal fade" id="menuModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -105,7 +92,6 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm">
-                            <!-- text input -->
                             <div class="form-group">
                                 <label>Title</label>
                                 <input type="text" class="form-control" placeholder="Title..." name="menu">
@@ -119,39 +105,8 @@
                 </div>
             </form>
         </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-<!-- edit menu modal -->
-<div class="modal fade" id="editMenuModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="<?= base_url('menu/edit') ?>" method="post">
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Menu</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="id" value="">
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" class="form-control" name="menu" placeholder="Title...">
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
-
-<!-- delete menu modal -->
 <div class="modal fade" id="deleteMenuModal">
     <div class="modal-dialog">
         <div class="modal-content">
