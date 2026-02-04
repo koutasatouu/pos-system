@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 04, 2026 at 10:14 PM
+-- Generation Time: Feb 04, 2026 at 10:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -138,6 +138,19 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (6, 1, 'Role', 'admin/role', 'fas fa-id-card-alt', 1),
 (7, 2, 'Change Password', 'user/changepassword', 'fas fa-key', 1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_token`
+--
+
+CREATE TABLE `user_token` (
+  `id` int(11) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `token` varchar(128) NOT NULL,
+  `date_created` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -173,6 +186,12 @@ ALTER TABLE `user_sub_menu`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `user_token`
+--
+ALTER TABLE `user_token`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -205,6 +224,12 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `user_sub_menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `user_token`
+--
+ALTER TABLE `user_token`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
