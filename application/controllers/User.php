@@ -26,7 +26,7 @@ class User extends CI_Controller
 
         $this->session->set_flashdata('msg_type', 'success');
         $this->session->set_flashdata('msg', '&nbsp;You have been logged out!');
-        redirect('auth');
+        redirect('');
     }
 
     public function edit()

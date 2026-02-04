@@ -49,17 +49,17 @@ class Auth extends CI_Controller
                 } else {
                     $this->session->set_flashdata('msg_type', 'error');
                     $this->session->set_flashdata('msg', '&nbsp;Wrong password!');
-                    redirect('auth');
+                    redirect('');
                 }
             } else {
                 $this->session->set_flashdata('msg_type', 'warning');
                 $this->session->set_flashdata('msg', '&nbsp;This email has not been activated!');
-                redirect('auth');
+                redirect('');
             }
         } else {
             $this->session->set_flashdata('msg_type', 'warning');
             $this->session->set_flashdata('msg', '&nbsp;Email is not registered!');
-            redirect('auth');
+            redirect('');
         }
     }
     public function registration()
@@ -97,7 +97,7 @@ class Auth extends CI_Controller
             $this->db->insert('user', $data);
             $this->session->set_flashdata('msg_type', 'success');
             $this->session->set_flashdata('msg', 'Congratulations! Your account has been created. Please login.');
-            redirect('auth');
+            redirect('');
         }
     }
     public function blocked()
