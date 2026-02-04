@@ -10,6 +10,9 @@ class Auth extends CI_Controller
     }
     public function index()
     {
+        if ($this->session->userdata('email')) {
+            redirect('user');
+        }
         $data['title'] = 'POS-System User Login';
         $this->load->view('templates/auth_header', $data);
         $this->load->view('auth/login');
