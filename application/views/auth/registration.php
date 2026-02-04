@@ -47,7 +47,7 @@
                         <div class="icheck-primary">
                             <input type="checkbox" id="agreeTerms" name="terms" value="agree">
                             <label for="agreeTerms">
-                                I agree to the <a href="#">terms</a>
+                                I agree to the <a href="<?= base_url('auth/terms') ?>">terms</a>
                             </label>
                         </div>
                     </div>

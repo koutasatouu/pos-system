@@ -67,6 +67,13 @@ class Auth extends CI_Controller
             redirect('');
         }
     }
+    public function terms()
+    {
+        $data['title'] = 'Terms and Conditions';
+        $this->load->view('templates/auth_header', $data);
+        $this->load->view('auth/terms');
+        $this->load->view('templates/auth_footer');
+    }
     public function registration()
     {
         if ($this->session->userdata('email')) {
@@ -159,14 +166,65 @@ class Auth extends CI_Controller
             'charset'   => 'utf-8',
             'newline'   => "\r\n"
         ];
+
         $this->load->library('email', $config);
         $this->email->initialize($config);
         $this->email->from('akuabib25@gmail.com', 'POS-System');
         $this->email->to($this->input->post('email'));
+
         if ($type == 'verify') {
-            $this->email->subject('Account Verification');
-            $this->email->message('Click this link to verify your account : <a href="' . base_url() . 'auth/verify?email=' . $this->input->post('email') . '&token=' . urlencode($token) . '">Activate</a>');
+            $email = $this->input->post('email');
+            $link = base_url() . 'auth/verify?email=' . $email . '&token=' . urlencode($token);
+
+            $this->email->subject('Activate Your Account - POS System');
+
+            $message = '
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    body { font-family: "Source Sans Pro", Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 0; }
+                    .wrapper { padding: 20px; }
+                    .container { max-width: 500px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 5px solid #007bff; }
+                    .header { text-align: center; margin-bottom: 20px; }
+                    .header h2 { color: #333; margin: 0; }
+                    .content { color: #555; line-height: 1.6; text-align: center; }
+                    .btn { display: inline-block; background-color: #007bff; color: #ffffff !important; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; margin-bottom: 20px; }
+                    .btn:hover { background-color: #0056b3; }
+                    .footer { text-align: center; font-size: 12px; color: #999; margin-top: 20px; }
+                    .link-text { font-size: 12px; color: #999; word-break: break-all; margin-top: 10px; }
+                </style>
+            </head>
+            <body>
+                <div class="wrapper">
+                    <div class="container">
+                        <div class="header">
+                            <h2>POS System</h2>
+                        </div>
+                        <div class="content">
+                            <h3>Welcome Aboard!</h3>
+                            <p>Thank you for registering. To get started, please confirm your email address by clicking the button below.</p>
+                            
+                            <a href="' . $link . '" class="btn">Verify My Account</a>
+                            
+                            <p>If the button works, you can ignore this email.</p>
+                            
+                            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                            
+                            <p class="link-text">If the button doesn\'t work, copy and paste this link into your browser:<br>
+                            ' . $link . '</p>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        &copy; ' . date('Y') . ' POS-System. All rights reserved.
+                    </div>
+                </div>
+            </body>
+            </html>';
+
+            $this->email->message($message);
         }
+
         if ($this->email->send()) {
             return true;
         } else {
