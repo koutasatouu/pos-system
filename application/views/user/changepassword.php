@@ -21,7 +21,7 @@
     <section class="content">
 
         <!-- left column -->
-        <div class="col-md-3">
+        <div class="col-md-4">
             <!-- general form elements -->
             <div class="card card-primary card-outline">
                 <!-- /.card-header -->
