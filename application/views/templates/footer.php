@@ -99,6 +99,26 @@
         });
     });
 </script>
+<!-- edit user -->
+<script>
+    $('.btn-edit-user').on('click', function() {
+        const id = $(this).data('id');
+        const role = $(this).data('role');
+        const active = $(this).data('active');
+
+        $('#editUserModal #edit_id').val(id);
+        $('#editUserModal #edit_role').val(role);
+        $('#editUserModal #edit_active').val(active);
+    });
+
+    $('.btn-delete-user').on('click', function() {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
+
+        $('#deleteUserModal #delete_id').val(id);
+        $('#deleteUserModal #delete_name').text(name);
+    });
+</script>
 <!-- img update -->
 <script>
     $('.custom-file-input').on('change', function() {
@@ -189,6 +209,7 @@
         $('#deleteMenuModal').modal('show');
     });
 </script>
+
 </body>
 
 </html>

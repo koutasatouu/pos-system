@@ -59,3 +59,4 @@ $route['forgot_password'] = 'auth/forgotPassword';
 $route['terms_and_condition'] = 'auth/terms';
 $route['verify'] = 'auth/verify';
 $route['resetPassword'] = 'auth/resetPassword';
+$route['blocked'] = 'auth/blocked';

@@ -115,7 +115,6 @@ class Admin extends CI_Controller
         $menu_id = (int)$this->input->post('menuId');
         $role_id = (int)$this->input->post('roleId');
 
-        // Restrict non-admins from touching admin role
         if ($role_id === 1 && (int)$this->session->userdata('role_id') !== 1) {
             $this->output
                 ->set_status_header(403)
@@ -158,7 +157,6 @@ class Admin extends CI_Controller
     }
     public function deleterole()
     {
-        // Only allow POST requests
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             show_error('Method Not Allowed', 405);
             return;
@@ -175,7 +173,6 @@ class Admin extends CI_Controller
 
         $role_id = (int) $role_id;
 
-        // Prevent deleting admin role
         if ($role_id === 1) {
             $this->session->set_flashdata('msg_type', 'error');
             $this->session->set_flashdata('msg', '&nbsp;Role Admin cannot be deleted!');
@@ -183,12 +180,76 @@ class Admin extends CI_Controller
             return;
         }
 
-        // delete role and related access records
         $this->db->delete('user_role', ['id' => $role_id]);
         $this->db->delete('user_access_menu', ['role_id' => $role_id]);
 
         $this->session->set_flashdata('msg_type', 'success');
         $this->session->set_flashdata('msg', '&nbsp;Role deleted!');
         redirect('admin/role');
+    }
+    public function users()
+    {
+        $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        $data['title'] = 'User Management';
+
+        $this->db->select('id, name, email, image, role_id, is_active, date_created');
+        $data['all_users'] = $this->db->get('user')->result_array();
+
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/topbar', $data);
+        $this->load->view('templates/sidebar', $data);
+        $this->load->view('admin/users', $data);
+        $this->load->view('templates/footer');
+    }
+    public function edituser()
+    {
+        if ($this->input->method() != 'post') {
+            redirect('admin/users');
+        }
+
+        $id = $this->input->post('id');
+
+        $current_user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+
+        if ($id == $current_user['id']) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;You cannot change your own role or status!');
+            redirect('admin/users');
+            return;
+        }
+
+        $data = [
+            'role_id' => $this->input->post('role_id'),
+            'is_active' => $this->input->post('is_active')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('user', $data);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;User updated successfully!');
+        redirect('admin/users');
+    }
+
+    public function deleteuser()
+    {
+        if ($this->input->method() != 'post') {
+            redirect('admin/users');
+        }
+
+        $id = $this->input->post('id');
+
+        $current_user = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
+        if ($id == $current_user['id']) {
+            $this->session->set_flashdata('msg_type', 'error');
+            $this->session->set_flashdata('msg', '&nbsp;You cannot delete yourself!');
+            redirect('admin/users');
+            return;
+        }
+        $this->db->delete('user', ['id' => $id]);
+
+        $this->session->set_flashdata('msg_type', 'success');
+        $this->session->set_flashdata('msg', '&nbsp;User deleted successfully!');
+        redirect('admin/users');
     }
 }
