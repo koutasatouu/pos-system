@@ -44,9 +44,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <?php $i = 1; ?>
                                     <?php foreach ($menu as $m) : ?>
                                         <tr>
-                                            <td><?= $m['id'] ?></td>
+                                            <td><?= $i++ ?></td>
                                             <td><?= $m['menu'] ?></td>
                                             <td>
                                                 <?php

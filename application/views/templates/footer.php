@@ -173,7 +173,6 @@
         $('#deleteSubMenuModal').modal('show');
     });
 </script>
-
 <!-- menu edit -->
 <script>
     $('.btn-edit-menu').on('click', function() {
@@ -184,7 +183,6 @@
         $('#editMenuModal').modal('show');
     });
 </script>
-
 <!-- menu delete -->
 <script>
     $('.btn-delete-menu').on('click', function() {

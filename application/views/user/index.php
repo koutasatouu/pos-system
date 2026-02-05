@@ -64,21 +64,25 @@
                             <h3 class="card-title">About Me</h3>
                         </div>
                         <div class="card-body">
-                            <strong><i class="fas fa-book mr-1"></i> Biography</strong>
+                            <strong>
+                                <i class="fas fa-book mr-1"></i>
+                                Biography
+                            </strong>
                             <p class="text-muted">
                                 <?= $user['about'] ? $user['about'] : '<span class="font-italic text-black-50">No biography added yet.</span>' ?>
                             </p>
-
                             <hr>
-
-                            <strong><i class="fas fa-phone mr-1"></i> Phone Number</strong>
+                            <strong><i class="fas fa-phone mr-1"></i>
+                                Phone Number
+                            </strong>
                             <p class="text-muted">
                                 <?= $user['phone_number'] ? $user['phone_number'] : '<span class="font-italic text-black-50">No phone number.</span>' ?>
                             </p>
-
                             <hr>
-
-                            <strong><i class="fas fa-map-marker-alt mr-1"></i> Account Type</strong>
+                            <strong>
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                Account Type
+                            </strong>
                             <p class="text-muted">
                                 <?= $user['role_id'] == 1 ? "System Administrator" : "Standard User" ?>
                             </p>
