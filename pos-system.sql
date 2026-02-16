@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 05 Feb 2026 pada 16.52
+-- Waktu pembuatan: 16 Feb 2026 pada 06.18
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -20,6 +20,179 @@ SET time_zone = "+00:00";
 --
 -- Database: `pos-system`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `ingredients`
+--
+
+CREATE TABLE `ingredients` (
+  `id` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `unit` varchar(20) NOT NULL,
+  `current_stock` decimal(12,3) NOT NULL DEFAULT 0.000,
+  `min_stock` decimal(12,3) NOT NULL DEFAULT 0.000,
+  `cost_per_unit` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `members`
+--
+
+CREATE TABLE `members` (
+  `id` int(11) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `points` int(11) NOT NULL DEFAULT 0,
+  `is_active` int(1) NOT NULL DEFAULT 1,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `invoice` varchar(50) NOT NULL,
+  `customer_name` varchar(50) DEFAULT 'Walk-in',
+  `member_id` int(11) DEFAULT NULL,
+  `user_id` int(11) NOT NULL,
+  `table_no` int(11) DEFAULT 0,
+  `total_amount` decimal(15,2) NOT NULL,
+  `tax` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `discount` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `final_amount` decimal(15,2) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `status` enum('Pending','Paid','Cancelled') NOT NULL DEFAULT 'Pending',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `price` decimal(15,2) NOT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `price` decimal(15,2) NOT NULL,
+  `cost_price` decimal(15,2) NOT NULL DEFAULT 0.00,
+  `image` varchar(128) DEFAULT NULL,
+  `is_available` int(1) NOT NULL DEFAULT 1,
+  `has_recipe` int(1) NOT NULL DEFAULT 0,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `product_categories`
+--
+
+CREATE TABLE `product_categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `product_recipes`
+--
+
+CREATE TABLE `product_recipes` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `ingredient_id` int(11) NOT NULL,
+  `amount` decimal(12,3) NOT NULL,
+  `unit` varchar(20) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `purchases`
+--
+
+CREATE TABLE `purchases` (
+  `id` int(11) NOT NULL,
+  `supplier_id` int(11) NOT NULL,
+  `invoice_no` varchar(50) NOT NULL,
+  `total_cost` decimal(15,2) NOT NULL,
+  `date` date NOT NULL,
+  `proof_image` varchar(128) DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `purchase_items`
+--
+
+CREATE TABLE `purchase_items` (
+  `id` int(11) NOT NULL,
+  `purchase_id` int(11) NOT NULL,
+  `ingredient_id` int(11) NOT NULL,
+  `qty` decimal(12,3) NOT NULL,
+  `price` decimal(15,2) NOT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `suppliers`
+--
+
+CREATE TABLE `suppliers` (
+  `id` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `address` text DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -70,7 +243,14 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 (12, 1, 2),
 (19, 2, 2),
 (38, 2, 3),
-(39, 1, 3);
+(39, 1, 3),
+(44, 1, 4),
+(45, 1, 5),
+(46, 1, 6),
+(47, 3, 2),
+(48, 3, 5),
+(49, 4, 2),
+(50, 4, 5);
 
 -- --------------------------------------------------------
 
@@ -90,7 +270,10 @@ CREATE TABLE `user_menu` (
 INSERT INTO `user_menu` (`id`, `menu`) VALUES
 (1, 'Admin'),
 (2, 'User'),
-(3, 'Menu');
+(3, 'Menu'),
+(4, 'Management'),
+(5, 'Transaction'),
+(6, 'Report');
 
 -- --------------------------------------------------------
 
@@ -109,7 +292,10 @@ CREATE TABLE `user_role` (
 
 INSERT INTO `user_role` (`id`, `role`) VALUES
 (1, 'Admin'),
-(2, 'Member');
+(2, 'Member'),
+(3, 'Cashier'),
+(4, 'Kitchen'),
+(5, 'Owner');
 
 -- --------------------------------------------------------
 
@@ -137,7 +323,16 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (4, 3, 'Menu Management', 'menu', 'fas fa-fw fa-folder', 1),
 (5, 3, 'Submenu Management', 'menu/submenu', 'fas fa-fw fa-folder-open', 1),
 (6, 1, 'Role', 'admin/role', 'fas fa-id-card-alt', 1),
-(7, 2, 'Change Password', 'user/changepassword', 'fas fa-key', 1);
+(7, 2, 'Change Password', 'user/changepassword', 'fas fa-key', 1),
+(17, 4, 'Categories', 'management/category', 'fas fa-fw fa-tags', 1),
+(18, 4, 'Products', 'management/product', 'fas fa-fw fa-coffee', 1),
+(19, 4, 'Ingredients', 'management/ingredient', 'fas fa-fw fa-box-open', 1),
+(20, 4, 'Suppliers', 'management/supplier', 'fas fa-fw fa-truck', 1),
+(21, 4, 'Members', 'management/member', 'fas fa-fw fa-users', 1),
+(22, 5, 'Cashier (POS)', 'pos', 'fas fa-fw fa-cash-register', 1),
+(23, 5, 'Order History', 'pos/history', 'fas fa-fw fa-receipt', 1),
+(24, 6, 'Sales Report', 'report/sales', 'fas fa-fw fa-chart-line', 1),
+(25, 6, 'Stock Report', 'report/stock', 'fas fa-fw fa-clipboard-list', 1);
 
 -- --------------------------------------------------------
 
@@ -155,6 +350,76 @@ CREATE TABLE `user_token` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indeks untuk tabel `ingredients`
+--
+ALTER TABLE `ingredients`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `members`
+--
+ALTER TABLE `members`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `member_id` (`member_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indeks untuk tabel `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indeks untuk tabel `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Indeks untuk tabel `product_categories`
+--
+ALTER TABLE `product_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `product_recipes`
+--
+ALTER TABLE `product_recipes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `ingredient_id` (`ingredient_id`);
+
+--
+-- Indeks untuk tabel `purchases`
+--
+ALTER TABLE `purchases`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `supplier_id` (`supplier_id`);
+
+--
+-- Indeks untuk tabel `purchase_items`
+--
+ALTER TABLE `purchase_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `purchase_id` (`purchase_id`),
+  ADD KEY `ingredient_id` (`ingredient_id`);
+
+--
+-- Indeks untuk tabel `suppliers`
+--
+ALTER TABLE `suppliers`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `user`
@@ -197,6 +462,66 @@ ALTER TABLE `user_token`
 --
 
 --
+-- AUTO_INCREMENT untuk tabel `ingredients`
+--
+ALTER TABLE `ingredients`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `members`
+--
+ALTER TABLE `members`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `product_categories`
+--
+ALTER TABLE `product_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `product_recipes`
+--
+ALTER TABLE `product_recipes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `purchases`
+--
+ALTER TABLE `purchases`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `purchase_items`
+--
+ALTER TABLE `purchase_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT untuk tabel `suppliers`
+--
+ALTER TABLE `suppliers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
@@ -206,7 +531,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_menu`
@@ -218,19 +543,63 @@ ALTER TABLE `user_menu`
 -- AUTO_INCREMENT untuk tabel `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_token`
 --
 ALTER TABLE `user_token`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+--
+
+--
+-- Ketidakleluasaan untuk tabel `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `fk_orders_member` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `fk_order_items_header` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_order_items_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `products`
+--
+ALTER TABLE `products`
+  ADD CONSTRAINT `fk_products_category` FOREIGN KEY (`category_id`) REFERENCES `product_categories` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `product_recipes`
+--
+ALTER TABLE `product_recipes`
+  ADD CONSTRAINT `fk_recipes_ingredient` FOREIGN KEY (`ingredient_id`) REFERENCES `ingredients` (`id`),
+  ADD CONSTRAINT `fk_recipes_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `purchases`
+--
+ALTER TABLE `purchases`
+  ADD CONSTRAINT `fk_purchases_supplier` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`);
+
+--
+-- Ketidakleluasaan untuk tabel `purchase_items`
+--
+ALTER TABLE `purchase_items`
+  ADD CONSTRAINT `fk_purchase_items_header` FOREIGN KEY (`purchase_id`) REFERENCES `purchases` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_purchase_items_ingredient` FOREIGN KEY (`ingredient_id`) REFERENCES `ingredients` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
