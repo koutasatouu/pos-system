@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Feb 2026 pada 06.18
+-- Waktu pembuatan: 16 Feb 2026 pada 07.55
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -37,6 +37,13 @@ CREATE TABLE `ingredients` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `ingredients`
+--
+
+INSERT INTO `ingredients` (`id`, `name`, `unit`, `current_stock`, `min_stock`, `cost_per_unit`, `created_at`, `updated_at`) VALUES
+(1, 'Excelso Robusta 150gr', 'pcs', 4.000, 1.000, 25000.00, '2026-02-16 12:46:03', '2026-02-16 13:39:02');
 
 -- --------------------------------------------------------
 
@@ -79,6 +86,13 @@ CREATE TABLE `orders` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `orders`
+--
+
+INSERT INTO `orders` (`id`, `invoice`, `customer_name`, `member_id`, `user_id`, `table_no`, `total_amount`, `tax`, `discount`, `final_amount`, `payment_method`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'POS-260216-692D', 'memek', NULL, 1, 0, 0.00, 0.00, 0.00, 15000.00, 'Cash', 'Paid', '2026-02-16 07:50:42', '2026-02-16 13:50:42');
+
 -- --------------------------------------------------------
 
 --
@@ -95,6 +109,13 @@ CREATE TABLE `order_items` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `qty`, `price`, `note`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 15000.00, '', '2026-02-16 13:50:42', '2026-02-16 13:50:42');
 
 -- --------------------------------------------------------
 
@@ -116,6 +137,13 @@ CREATE TABLE `products` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `products`
+--
+
+INSERT INTO `products` (`id`, `category_id`, `code`, `name`, `price`, `cost_price`, `image`, `is_available`, `has_recipe`, `created_at`, `updated_at`) VALUES
+(1, 2, 'PRD-001', 'Es Kopi Susu Gula Aren', 15000.00, 0.00, '00000-3781729663.png', 1, 0, '2026-02-16 13:39:32', '2026-02-16 13:50:17');
+
 -- --------------------------------------------------------
 
 --
@@ -128,6 +156,13 @@ CREATE TABLE `product_categories` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `product_categories`
+--
+
+INSERT INTO `product_categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(2, 'Coffee', '2026-02-16 12:45:12', '2026-02-16 12:45:12');
 
 -- --------------------------------------------------------
 
@@ -162,6 +197,13 @@ CREATE TABLE `purchases` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `purchases`
+--
+
+INSERT INTO `purchases` (`id`, `supplier_id`, `invoice_no`, `total_cost`, `date`, `proof_image`, `created_at`, `updated_at`) VALUES
+(1, 1, 'INV-20260216-001', 100000.00, '2026-02-16', NULL, '2026-02-16 13:26:07', '2026-02-16 13:26:07');
+
 -- --------------------------------------------------------
 
 --
@@ -178,6 +220,13 @@ CREATE TABLE `purchase_items` (
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data untuk tabel `purchase_items`
+--
+
+INSERT INTO `purchase_items` (`id`, `purchase_id`, `ingredient_id`, `qty`, `price`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 4.000, 100000.00, '2026-02-16 13:26:07', '2026-02-16 13:26:07');
+
 -- --------------------------------------------------------
 
 --
@@ -193,6 +242,13 @@ CREATE TABLE `suppliers` (
   `created_at` datetime DEFAULT current_timestamp(),
   `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `suppliers`
+--
+
+INSERT INTO `suppliers` (`id`, `name`, `phone`, `address`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'PT. Sumber Kopi Prima', '08412845621', 'Desa Loram Wetan,Jati Kudus, Jawa Tengah 59311', '', '2026-02-16 12:47:27', '2026-02-16 12:47:27');
 
 -- --------------------------------------------------------
 
@@ -245,12 +301,12 @@ INSERT INTO `user_access_menu` (`id`, `role_id`, `menu_id`) VALUES
 (38, 2, 3),
 (39, 1, 3),
 (44, 1, 4),
-(45, 1, 5),
 (46, 1, 6),
 (47, 3, 2),
 (48, 3, 5),
 (49, 4, 2),
-(50, 4, 5);
+(50, 4, 5),
+(55, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -272,7 +328,7 @@ INSERT INTO `user_menu` (`id`, `menu`) VALUES
 (2, 'User'),
 (3, 'Menu'),
 (4, 'Management'),
-(5, 'Transaction'),
+(5, 'Purchase'),
 (6, 'Report');
 
 -- --------------------------------------------------------
@@ -329,10 +385,12 @@ INSERT INTO `user_sub_menu` (`id`, `menu_id`, `title`, `url`, `icon`, `is_active
 (19, 4, 'Ingredients', 'management/ingredient', 'fas fa-fw fa-box-open', 1),
 (20, 4, 'Suppliers', 'management/supplier', 'fas fa-fw fa-truck', 1),
 (21, 4, 'Members', 'management/member', 'fas fa-fw fa-users', 1),
-(22, 5, 'Cashier (POS)', 'pos', 'fas fa-fw fa-cash-register', 1),
-(23, 5, 'Order History', 'pos/history', 'fas fa-fw fa-receipt', 1),
+(22, 5, 'Cashier (POS)', 'purchase/cashier', 'fas fa-fw fa-cash-register', 1),
+(23, 5, 'Order History', 'purchase/order_history', 'fas fa-fw fa-receipt', 1),
 (24, 6, 'Sales Report', 'report/sales', 'fas fa-fw fa-chart-line', 1),
-(25, 6, 'Stock Report', 'report/stock', 'fas fa-fw fa-clipboard-list', 1);
+(25, 6, 'Stock Report', 'report/stock', 'fas fa-fw fa-clipboard-list', 1),
+(26, 5, 'Stock In or Purchasing', 'purchase', 'fas fa-fw fa-truck-loading', 1),
+(27, 5, 'Stock In History', 'purchase/history', 'fas fa-fw fa-history', 1);
 
 -- --------------------------------------------------------
 
@@ -465,7 +523,7 @@ ALTER TABLE `user_token`
 -- AUTO_INCREMENT untuk tabel `ingredients`
 --
 ALTER TABLE `ingredients`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `members`
@@ -477,25 +535,25 @@ ALTER TABLE `members`
 -- AUTO_INCREMENT untuk tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `product_categories`
 --
 ALTER TABLE `product_categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `product_recipes`
@@ -507,19 +565,19 @@ ALTER TABLE `product_recipes`
 -- AUTO_INCREMENT untuk tabel `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `purchase_items`
 --
 ALTER TABLE `purchase_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
@@ -531,7 +589,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `user_access_menu`
 --
 ALTER TABLE `user_access_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_menu`
@@ -549,7 +607,7 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT untuk tabel `user_sub_menu`
 --
 ALTER TABLE `user_sub_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT untuk tabel `user_token`

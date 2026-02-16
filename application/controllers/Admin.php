@@ -36,7 +36,7 @@ class Admin extends CI_Controller
         } else {
             $data['role'] = $this->db->where('id !=', 1)->get('user_role')->result_array();
         }
-        $data['title'] = 'POS-System Admin Dashboard';
+        $data['title'] = 'Role';
 
         $this->load->library('form_validation');
         $this->form_validation->set_rules('role', 'Role', 'required|trim|is_unique[user_role.role]', [
