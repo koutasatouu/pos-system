@@ -274,7 +274,7 @@ class Purchase extends CI_Controller
         // Force Menu ID to be Transaction (5)
         $data['menu_id'] = 5;
 
-        $data['title'] = 'Order History (Sales)';
+        $data['title'] = 'Order History';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
         // Get Sales Data joined with Cashier Name and Member Name

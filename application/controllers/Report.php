@@ -59,7 +59,7 @@ class Report extends CI_Controller
     // ===============================================================
     public function stock()
     {
-        $data['title'] = 'Stock Asset Report';
+        $data['title'] = 'Stock Report';
         $data['user'] = $this->db->get_where('user', ['email' => $this->session->userdata('email')])->row_array();
 
         // Get all ingredients and calculate asset value (Stock * Cost)

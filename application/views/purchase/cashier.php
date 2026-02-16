@@ -38,7 +38,7 @@
                         <div class="card-header">
                             <input type="text" id="search" class="form-control" placeholder="Search menu...">
                         </div>
-                        <div class="card-body bg-light scroll-area">
+                        <div class="card-body bg-dark scroll-area">
                             <div class="row" id="product-grid">
                                 <?php foreach ($products as $p) : ?>
                                     <div class="col-md-4 col-sm-6 product-item" data-name="<?= strtolower($p['name']); ?>">
@@ -84,7 +84,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="card-footer bg-white">
+                            <div class="card-footer">
                                 <div class="d-flex justify-content-between mb-2">
                                     <h5>Grand Total:</h5>
                                     <h5 class="text-primary font-weight-bold" id="display-total">Rp 0</h5>
