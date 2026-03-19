@@ -45,7 +45,7 @@
                                         <div class="card product-card mb-3" onclick="addToCart(<?= $p['id']; ?>, '<?= $p['name']; ?>', <?= $p['price']; ?>)">
 
                                             <?php $img = $p['image'] ? $p['image'] : 'default.jpg'; ?>
-                                            <img src="<?= base_url('assets/img/product/') . $img; ?>" class="card-img-top" style="height: 100px; object-fit: cover;">
+                                            <img src="<?= base_url('assets/img/product/') . $img; ?>" class="card-img-top" style="height: 150px; object-fit: cover;">
 
                                             <div class="card-body p-2 text-center">
                                                 <h6 class="font-weight-bold mb-0 text-truncate"><?= $p['name']; ?></h6>

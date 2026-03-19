@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Feb 2026 pada 07.55
+-- Waktu pembuatan: 19 Mar 2026 pada 07.03
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.1.25
 
@@ -142,7 +142,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `category_id`, `code`, `name`, `price`, `cost_price`, `image`, `is_available`, `has_recipe`, `created_at`, `updated_at`) VALUES
-(1, 2, 'PRD-001', 'Es Kopi Susu Gula Aren', 15000.00, 0.00, '00000-3781729663.png', 1, 0, '2026-02-16 13:39:32', '2026-02-16 13:50:17');
+(1, 2, 'PRD-001', 'Es Kopi Susu Gula Aren', 15000.00, 0.00, 'es-kopi-susu-gula-aren.jpeg', 1, 0, '2026-02-16 13:39:32', '2026-03-19 12:53:54'),
+(2, 2, 'PRD-002', 'Cappucino', 20000.00, 0.00, 'cappuccino.jpg', 1, 0, '2026-03-19 12:54:36', '2026-03-19 12:54:36'),
+(3, 2, 'PRD-003', 'Cafe Latte', 12000.00, 0.00, 'Cafe-Latte-Gelado-45o.jpg', 1, 0, '2026-03-19 12:56:06', '2026-03-19 12:56:06');
 
 -- --------------------------------------------------------
 
@@ -547,7 +549,7 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `product_categories`
